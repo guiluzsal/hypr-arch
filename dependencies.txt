@@ -162,6 +162,7 @@ visual-studio-code-bin
 loupe
 claude-code
 musescore
+anki
 
 # === VIRTUALIZATION (Oracle VirtualBox) ===
 virtualbox
