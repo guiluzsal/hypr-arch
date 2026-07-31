@@ -17,7 +17,7 @@ A modern Arch Linux desktop environment featuring Hyprland (Wayland compositor) 
 
 ### Quick Install
 ```bash
-git clone https://github.com/chsoares/hypr-arch.git
+git clone https://github.com/guiluzsal/hypr-arch.git
 cd ~/hypr-arch
 ./install.sh
 ```
