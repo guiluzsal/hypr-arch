@@ -85,8 +85,11 @@ install_packages() {
     fi
     
     # Remove comments and empty lines, then install
-    # (interactive: yay will show PKGBUILD diffs and ask for confirmation on AUR packages)
-    grep -v '^#' dependencies.txt | grep -v '^$' | xargs yay -S --needed
+    # (interactive: yay will show PKGBUILD diffs and ask for confirmation on AUR packages.
+    # Read into an array rather than piping into xargs: xargs would hand yay a stdin
+    # that's already at EOF from the pipe, breaking those prompts.)
+    mapfile -t packages < <(grep -v '^#' dependencies.txt | grep -v '^$')
+    yay -S --needed "${packages[@]}"
 
     # Some configs
     #claude config set -g autoUpdates disabled

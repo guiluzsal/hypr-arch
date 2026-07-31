@@ -143,7 +143,7 @@ docker
 docker-buildx
 docker-compose
 freerdp
-gnu-netcat
+openbsd-netcat
 
 # === BOOTLOADER & SNAPSHOTS ===
 grub
