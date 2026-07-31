@@ -163,11 +163,17 @@ setup_user_groups() {
 # Enable and start required services
 setup_services() {
     print_step "Enabling system services..."
-    
+
+    # Enable NetworkManager (disable a conflicting dhcpcd from the base
+    # install first, if present, since both can't manage the same interface)
+    sudo systemctl disable dhcpcd.service 2>/dev/null || true
+    sudo systemctl enable NetworkManager --now
+    print_success "Enabled NetworkManager service"
+
     # Enable ydotool for automation/typing
     systemctl --user enable ydotool --now
     print_success "Enabled ydotool service"
-    
+
     # Enable Bluetooth
     sudo systemctl enable bluetooth --now
     print_success "Enabled Bluetooth service"
@@ -308,12 +314,15 @@ setup_grub_theme() {
         sudo rm -rf /boot/grub/themes/Particle* 2>/dev/null || true
         sudo rm -rf /usr/share/grub/themes/Particle* 2>/dev/null || true
         
-        # Run our automated installation script
+        # Run our automated installation script (non-fatal: this is cosmetic,
+        # a hiccup here shouldn't be reported as if the whole install failed)
         cd "$base/grub"
-        sudo ./install-theme.sh
+        if sudo ./install-theme.sh; then
+            print_success "Particle GRUB theme installed successfully"
+        else
+            print_warning "GRUB theme installation failed - GRUB will still boot with its default theme"
+        fi
         cd "$base"
-        
-        print_success "Particle GRUB theme installed successfully"
     else
         print_warning "Local GRUB theme installer not found - skipping theme installation"
     fi

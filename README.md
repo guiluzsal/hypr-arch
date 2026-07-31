@@ -12,8 +12,8 @@ A modern Arch Linux desktop environment featuring Hyprland (Wayland compositor) 
 ## Installation
 
 ### Prerequisites
-- Fresh Arch Linux installation
-- Tested with GNOME as base environment
+- Fresh Arch Linux installation with GRUB as the bootloader (the script assumes and configures GRUB; it does not support systemd-boot)
+- `sudo` installed and configured for your user (not set up by default on a manual/pacstrap install)
 
 ### Quick Install
 ```bash
