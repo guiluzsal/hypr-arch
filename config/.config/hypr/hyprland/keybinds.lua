@@ -266,9 +266,6 @@ hl.bind("SUPER + B",
 hl.bind("SUPER + O",
     hl.dsp.exec_cmd("obsidian -enable-features=UseOzonePlatform -ozone-platform=wayland"),
     { description = "App: Obsidian" })
-hl.bind("SUPER + A",
-    hl.dsp.exec_cmd("claude-desktop-native -enable-features=UseOzonePlatform -ozone-platform=wayland"),
-    { description = "App: Claude" })
 hl.bind("SUPER + M",
     hl.dsp.exec_cmd("pgrep spotify && hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"spotify\")' || spotify --enable-features=UseOzonePlatform --ozone-platform=wayland"),
     { description = "App: Spotify" })

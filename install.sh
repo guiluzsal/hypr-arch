@@ -88,20 +88,6 @@ install_packages() {
     # (interactive: yay will show PKGBUILD diffs and ask for confirmation on AUR packages)
     grep -v '^#' dependencies.txt | grep -v '^$' | xargs yay -S --needed
 
-    # Install claude-desktop-native from AUR manually (not available in yay)
-    if pacman -Qi claude-desktop-native >/dev/null 2>&1; then
-        print_success "claude-desktop-native is already installed"
-    else
-        print_step "Installing claude-desktop-native from AUR..."
-        rm -rf /tmp/claude-desktop-native # clean up any leftovers from a previously interrupted run
-        cd /tmp
-        git clone https://github.com/jkoelker/claude-desktop-native/
-        cd claude-desktop-native
-        makepkg -si
-        cd "$base"
-        rm -rf /tmp/claude-desktop-native
-    fi
-
     # Some configs
     #claude config set -g autoUpdates disabled
     
