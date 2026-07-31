@@ -59,15 +59,15 @@ install_yay() {
     fi
 
     print_step "Installing yay AUR helper..."
-    
+
     # Install base-devel if not present
     sudo pacman -S --needed --noconfirm base-devel git
-    
-    # Clone and build yay
+
+    # Clone and build yay (interactive: review the PKGBUILD before it builds/installs)
     cd /tmp
     git clone https://aur.archlinux.org/yay-bin.git
     cd yay-bin
-    makepkg -si --noconfirm
+    makepkg -si
     cd "$base"
     rm -rf /tmp/yay-bin
     
@@ -84,14 +84,15 @@ install_packages() {
     fi
     
     # Remove comments and empty lines, then install
-    grep -v '^#' dependencies.txt | grep -v '^$' | xargs yay -S --needed --noconfirm
-    
+    # (interactive: yay will show PKGBUILD diffs and ask for confirmation on AUR packages)
+    grep -v '^#' dependencies.txt | grep -v '^$' | xargs yay -S --needed
+
     # Install claude-desktop-native from AUR manually (not available in yay)
     print_step "Installing claude-desktop-native from AUR..."
     cd /tmp
     git clone https://github.com/jkoelker/claude-desktop-native/
     cd claude-desktop-native
-    makepkg -si --noconfirm
+    makepkg -si
     cd "$base"
     rm -rf /tmp/claude-desktop-native
 
@@ -328,7 +329,9 @@ setup_sddm() {
         print_step "Installing Sugar Candy SDDM theme..."
         sudo mkdir -p /usr/share/sddm/themes/
         sudo cp -rf "$base/sddm" /usr/share/sddm/themes/sugar-candy
-        sudo chmod -R 777 /usr/share/sddm/themes/sugar-candy
+        sudo chown -R root:root /usr/share/sddm/themes/sugar-candy
+        sudo find /usr/share/sddm/themes/sugar-candy -type d -exec chmod 755 {} \;
+        sudo find /usr/share/sddm/themes/sugar-candy -type f -exec chmod 644 {} \;
         print_success "SDDM theme installed to /usr/share/sddm/themes/sugar-candy/"
     else
         print_warning "sddm/ theme directory not found - skipping theme installation"
