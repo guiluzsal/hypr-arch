@@ -12,14 +12,7 @@ This is an Arch Linux dotfiles repository containing configuration files for a m
 
 ## Installation and Setup
 
-The dotfiles are managed using GNU Stow:
-```bash
-yay -Sy stow
-cd ~/arch-dotfiles
-stow config
-```
-
-This symlinks all configuration files from `config/.config/` to `~/.config/`.
+Run `./install.sh` from the repo root. It installs all packages in `dependencies.txt` via `yay`, sets up the Python venv from `requirements.txt`, configures system services/groups, and copies (not symlinks) everything under `config/.config/` to `~/.config/`.
 
 ## Architecture
 

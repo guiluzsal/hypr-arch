@@ -13,7 +13,6 @@ ripgrep
 jq
 meson
 xdg-user-dirs
-xorg-xhost
 fish
 
 # === HYPRLAND ECOSYSTEM ===
@@ -85,8 +84,6 @@ translate-shell
 hyprshot
 slurp
 swappy
-tesseract
-tesseract-data-eng
 wf-recorder
 wlogout
 
@@ -129,7 +126,6 @@ eza
 git
 zoxide
 yazi
-stow
 timeshift
 timeshift-autosnap
 plocate
@@ -156,7 +152,6 @@ os-prober
 efibootmgr
 
 # === USER APPLICATIONS ===
-ferdium-bin
 obsidian
 spotify
 zen-browser-bin
@@ -172,8 +167,6 @@ grimblast-git
 satty
 
 # === LANGUAGE/TEXT SUPPORT ===
-libvoikko
-hspell
 nuspell
 
 # === BUILD DEPENDENCIES (for AUR packages) ===
