@@ -150,18 +150,18 @@ setup_user_groups() {
     user_groups=$(groups "$(whoami)")
     groups_to_add=()
     
-    for group in video i2c input; do
+    for group in video i2c input vboxusers; do
         if [[ ! $user_groups =~ $group ]]; then
             groups_to_add+=("$group")
         fi
     done
-    
+
     if [[ ${#groups_to_add[@]} -gt 0 ]]; then
         print_step "Adding user to groups: ${groups_to_add[*]}"
         sudo usermod -aG "$(IFS=,; echo "${groups_to_add[*]}")" "$(whoami)"
         print_success "Added user to required groups"
     else
-        print_success "User already in all required groups (video, i2c, input)"
+        print_success "User already in all required groups (video, i2c, input, vboxusers)"
     fi
     
     # Check if i2c-dev module config already exists

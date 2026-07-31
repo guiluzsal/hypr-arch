@@ -161,6 +161,12 @@ nautilus-open-any-terminal
 visual-studio-code-bin
 loupe
 claude-code
+musescore
+
+# === VIRTUALIZATION (Oracle VirtualBox) ===
+virtualbox
+virtualbox-host-dkms
+linux-headers
 
 # === SCREENSHOT TOOLS ===
 grimblast-git
