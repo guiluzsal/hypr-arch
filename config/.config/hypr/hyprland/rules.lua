@@ -52,9 +52,6 @@ hl.workspace_rule({ workspace = "special:special", gaps_out = 30 })
 hl.workspace_rule({ workspace = "special:spotify", gaps_out = 30 })
 hl.window_rule({ match = { class = "spotify" }, workspace = "special:spotify" })
 
-hl.workspace_rule({ workspace = "special:ferdium", gaps_out = 30 })
-hl.window_rule({ match = { class = "ferdium" }, workspace = "special:ferdium" })
-
 hl.workspace_rule({ workspace = "special:calc", gaps_out = 30 })
 hl.window_rule({ match = { class = "qalculate-gtk" }, float = true, center = true, workspace = "special:calc" })
 

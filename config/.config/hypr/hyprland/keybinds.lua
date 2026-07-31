@@ -269,9 +269,6 @@ hl.bind("SUPER + O",
 hl.bind("SUPER + M",
     hl.dsp.exec_cmd("pgrep spotify && hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"spotify\")' || spotify --enable-features=UseOzonePlatform --ozone-platform=wayland"),
     { description = "App: Spotify" })
-hl.bind("SUPER + Z",
-    hl.dsp.exec_cmd("pgrep -f ferdium && hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"ferdium\")' || ferdium --enable-features=UseOzonePlatform --ozone-platform=wayland"),
-    { description = "App: Ferdium" })
 
 ---! Testing
 --# Testing
