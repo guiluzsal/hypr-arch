@@ -124,6 +124,7 @@ awww
 kitty
 eza
 git
+nodejs
 zoxide
 yazi
 timeshift
