@@ -170,6 +170,11 @@ virtualbox
 virtualbox-host-dkms
 linux-headers
 
+# === PRIVACY & VPN ===
+proton-vpn-gtk-app
+tor
+torbrowser-launcher
+
 # === SCREENSHOT TOOLS ===
 grimblast-git
 satty
