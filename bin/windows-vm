@@ -164,6 +164,7 @@ save_settings() {
 VM_STORAGE="$VM_STORAGE"
 SHARED_DIR="$SHARED_DIR"
 EOF
+    chmod 600 "$SETTINGS_FILE"
 }
 
 ###############################################################################
@@ -217,9 +218,11 @@ cmd_install() {
 
     ok "VM storage: $VM_STORAGE"
 
-    # Username/password
+    # Username/password (random password so it's not a guessable default,
+    # even though RDP/SSH are only exposed on 127.0.0.1)
     local username="admin"
-    local password="admin"
+    local password
+    password=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 20)
 
     # Timezone
     local tz
@@ -230,6 +233,7 @@ cmd_install() {
 
     # Generate compose file and OEM post-install scripts
     mkdir -p "$(dirname "$COMPOSE_FILE")" "$VM_STORAGE" "$SHARED_DIR" "$OEM_DIR"
+    chmod 700 "$CONFIG_DIR"
 
     # Copy post-install script (enables OpenSSH Server)
     local script_dir
@@ -269,6 +273,7 @@ services:
     restart: unless-stopped
     stop_grace_period: 2m
 EOF
+    chmod 600 "$COMPOSE_FILE"
 
     ok "Configuration saved to $COMPOSE_FILE"
     echo
