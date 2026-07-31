@@ -64,6 +64,7 @@ install_yay() {
     sudo pacman -S --needed --noconfirm base-devel git
 
     # Clone and build yay (interactive: review the PKGBUILD before it builds/installs)
+    rm -rf /tmp/yay-bin # clean up any leftovers from a previously interrupted run
     cd /tmp
     git clone https://aur.archlinux.org/yay-bin.git
     cd yay-bin
@@ -88,13 +89,18 @@ install_packages() {
     grep -v '^#' dependencies.txt | grep -v '^$' | xargs yay -S --needed
 
     # Install claude-desktop-native from AUR manually (not available in yay)
-    print_step "Installing claude-desktop-native from AUR..."
-    cd /tmp
-    git clone https://github.com/jkoelker/claude-desktop-native/
-    cd claude-desktop-native
-    makepkg -si
-    cd "$base"
-    rm -rf /tmp/claude-desktop-native
+    if pacman -Qi claude-desktop-native >/dev/null 2>&1; then
+        print_success "claude-desktop-native is already installed"
+    else
+        print_step "Installing claude-desktop-native from AUR..."
+        rm -rf /tmp/claude-desktop-native # clean up any leftovers from a previously interrupted run
+        cd /tmp
+        git clone https://github.com/jkoelker/claude-desktop-native/
+        cd claude-desktop-native
+        makepkg -si
+        cd "$base"
+        rm -rf /tmp/claude-desktop-native
+    fi
 
     # Some configs
     #claude config set -g autoUpdates disabled
@@ -253,9 +259,13 @@ setup_grub_timeshift() {
     
     # Check if system is UEFI
     if [[ -d /sys/firmware/efi ]]; then
-        print_step "Installing GRUB for UEFI system..."
-        sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-        sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB --removable
+        if [[ -f /boot/EFI/GRUB/grubx64.efi ]] && sudo efibootmgr | grep -q "GRUB"; then
+            print_success "GRUB is already installed for UEFI - skipping grub-install"
+        else
+            print_step "Installing GRUB for UEFI system..."
+            sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+            sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB --removable
+        fi
     else
         print_error "BIOS systems not supported by this script. Please install manually."
         return 1
@@ -265,8 +275,11 @@ setup_grub_timeshift() {
     print_step "Configuring GRUB settings..."
     
     # Enable os-prober for dual boot detection
-    if ! grep -q "GRUB_DISABLE_OS_PROBER=false" /etc/default/grub; then
-        sudo sed -i '/^#GRUB_DISABLE_OS_PROBER/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
+    if grep -q "^GRUB_DISABLE_OS_PROBER=false" /etc/default/grub; then
+        : # already set correctly
+    elif grep -q "^#\?GRUB_DISABLE_OS_PROBER" /etc/default/grub; then
+        sudo sed -i 's/^#\?GRUB_DISABLE_OS_PROBER.*/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+    else
         echo "GRUB_DISABLE_OS_PROBER=false" | sudo tee -a /etc/default/grub > /dev/null
     fi
     

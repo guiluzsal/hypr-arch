@@ -174,12 +174,18 @@ EOF
 cmd_install() {
     check_deps
 
+    local existing_username="" existing_password=""
     if [[ -f "$COMPOSE_FILE" ]]; then
         warn "Existing configuration found at $COMPOSE_FILE"
         if ! gum confirm "Overwrite existing configuration?"; then
             msg "Aborted."
             exit 0
         fi
+        # Preserve the existing credential: the guest account's actual
+        # password was set once at first boot and won't change just
+        # because we regenerate the compose file (e.g. to bump RAM/CPU).
+        existing_username=$(grep 'USERNAME:' "$COMPOSE_FILE" | head -1 | sed 's/.*: *"\?\([^"]*\)"\?/\1/')
+        existing_password=$(grep 'PASSWORD:' "$COMPOSE_FILE" | head -1 | sed 's/.*: *"\?\([^"]*\)"\?/\1/')
     fi
 
     msg "Windows VM Setup"
@@ -218,11 +224,14 @@ cmd_install() {
 
     ok "VM storage: $VM_STORAGE"
 
-    # Username/password (random password so it's not a guessable default,
-    # even though RDP/SSH are only exposed on 127.0.0.1)
-    local username="admin"
-    local password
-    password=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 20)
+    # Username/password: reuse the existing credential when reconfiguring
+    # an already-provisioned VM; only generate a fresh random password
+    # (instead of a guessable default) on a genuinely new install.
+    local username="${existing_username:-admin}"
+    local password="$existing_password"
+    if [[ -z "$password" ]]; then
+        password=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 20)
+    fi
 
     # Timezone
     local tz
